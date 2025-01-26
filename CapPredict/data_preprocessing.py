@@ -44,7 +44,6 @@ def generate_curves(num_curves=30, time_start=0, time_end=10, num_points=500, se
 
     return curves_df
 
-
 def extract_features(curves_df):
     """
     Extract features from S-curves for analysis and modeling.

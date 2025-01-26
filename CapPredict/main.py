@@ -1,11 +1,12 @@
 from data_preprocessing import generate_curves, extract_features
 import matplotlib.pyplot as plt
 
+
 def run_pipeline():
     # Step 1: Generate S-Curves
     curves_df = generate_curves()
 
-    # Step 2: Extract Features
+    # # Step 2: Extract Features
     features_df = extract_features(curves_df)
     print("Extracted Features:")
     print(features_df)

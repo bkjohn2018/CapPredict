@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>6c17a059-72ab-4035-acf4-430d7a3ce45a</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>CapPredict.py</StartupFile>
+    <StartupFile>main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
