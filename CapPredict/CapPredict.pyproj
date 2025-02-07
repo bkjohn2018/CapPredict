@@ -25,6 +25,9 @@
     <Compile Include="CapPredict.py" />
     <Compile Include="data_preprocessing.py" />
     <Compile Include="main.py" />
+    <Compile Include="data_loader.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="predictive_model.py" />
   </ItemGroup>
   <ItemGroup>

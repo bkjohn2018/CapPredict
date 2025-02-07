@@ -1,3 +1,5 @@
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import train_test_split
 import numpy as np
 import pandas as pd
 
@@ -77,3 +79,41 @@ def extract_features(curves_df):
     # Convert to DataFrame
     features_df = pd.DataFrame(features)
     return features_df
+
+
+def normalize_features(features_df):
+    """
+    Normalize feature values using Min-Max Scaling.
+
+    Parameters:
+        features_df (pd.DataFrame): DataFrame containing extracted features.
+
+    Returns:
+        pd.DataFrame: Normalized feature values.
+    """
+    scaler = MinMaxScaler()
+    
+    # Selecting only numerical feature columns
+    feature_columns = ["Inflection_Point", "Growth_Rate", "Final_Value"]
+    normalized_values = scaler.fit_transform(features_df[feature_columns])
+    
+    # Convert back to DataFrame
+    normalized_df = pd.DataFrame(normalized_values, columns=feature_columns)
+    normalized_df.insert(0, "Project", features_df["Project"])  # Keep project names
+
+    return normalized_df
+
+def split_data(features_df, test_size=0.2, random_state=42):
+    """
+    Split the dataset into training and testing sets.
+
+    Parameters:
+        features_df (pd.DataFrame): DataFrame containing normalized features.
+        test_size (float): Proportion of the dataset to allocate to testing.
+        random_state (int): Seed for reproducibility.
+
+    Returns:
+        pd.DataFrame, pd.DataFrame: Training and testing datasets.
+    """
+    train_df, test_df = train_test_split(features_df, test_size=test_size, random_state=random_state)
+    return train_df, test_df

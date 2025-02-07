@@ -1,26 +1,32 @@
-from data_preprocessing import generate_curves, extract_features
+from data_loader import load_data
+from data_preprocessing import extract_features, normalize_features, split_data
+from predictive_model import train_logistic_regression, evaluate_model
 import matplotlib.pyplot as plt
 
+def run_pipeline(source="csv", filepath="data/project_data.csv"):
+    # Step 1: Load Data (from CSV for Palantir or OneLake for Fabric)
+    data_df = load_data(source=source, filepath=filepath)
 
-def run_pipeline():
-    # Step 1: Generate S-Curves
-    curves_df = generate_curves()
+    # Step 2: Extract Features
+    features_df = extract_features(data_df)
 
-    # # Step 2: Extract Features
-    features_df = extract_features(curves_df)
-    print("Extracted Features:")
-    print(features_df)
+    # Step 3: Normalize Features
+    normalized_df = normalize_features(features_df)
 
-    # Plot a sample of 5 curves
-    plt.figure(figsize=(10, 6))
-    for col in curves_df.columns[:5]:  # Plot only the first 5 projects
-        plt.plot(curves_df["Time"], curves_df[col], label=col)
+    # Step 4: Split Data
+    train_df, test_df = split_data(normalized_df)
 
-    plt.title("Sample of Random S-Curves")
-    plt.xlabel("Time")
-    plt.ylabel("Progress")
-    plt.legend()
-    plt.show()
+    # Step 5: Train Model
+    model = train_logistic_regression(train_df)
+
+    # Step 6: Evaluate Model
+    evaluate_model(model, test_df)
+
+    print("\nForecasting Pipeline Completed.")
 
 if __name__ == "__main__":
-    run_pipeline()
+    # Run pipeline using CSV for Palantir (default)
+    run_pipeline(source="csv", filepath="data/project_data.csv")
+
+    # Uncomment for Fabric deployment
+    # run_pipeline(source="fabric")
