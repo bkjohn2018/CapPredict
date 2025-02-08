@@ -1,32 +1,27 @@
-from data_loader import load_data
-from data_preprocessing import extract_features, normalize_features, split_data
-from predictive_model import train_logistic_regression, evaluate_model
+from data_preprocessing import generate_curves, extract_features, normalize_features, split_data
+from predictive_model import train_random_forest, evaluate_model
 import matplotlib.pyplot as plt
 
-def run_pipeline(source="csv", filepath="data/project_data.csv"):
-    # Step 1: Load Data (from CSV for Palantir or OneLake for Fabric)
-    data_df = load_data(source=source, filepath=filepath)
+def run_pipeline():
+    # Step 1: Generate More Curves
+    curves_df = generate_curves(num_curves=100)
 
-    # Step 2: Extract Features
-    features_df = extract_features(data_df)
+    # Step 2: Extract Enhanced Features
+    features_df = extract_features(curves_df)
 
-    # Step 3: Normalize Features
+    # Step 3: Normalize Data
     normalized_df = normalize_features(features_df)
 
-    # Step 4: Split Data
+    # Step 4: Split Data (with SMOTE balancing)
     train_df, test_df = split_data(normalized_df)
 
-    # Step 5: Train Model
-    model = train_logistic_regression(train_df)
+    # Step 5: Train Model (Random Forest)
+    model = train_random_forest(train_df)
 
-    # Step 6: Evaluate Model
+    # Step 6: Evaluate Performance
     evaluate_model(model, test_df)
 
-    print("\nForecasting Pipeline Completed.")
+    print("\nRandom Forest Model Training Complete!")
 
 if __name__ == "__main__":
-    # Run pipeline using CSV for Palantir (default)
-    run_pipeline(source="csv", filepath="data/project_data.csv")
-
-    # Uncomment for Fabric deployment
-    # run_pipeline(source="fabric")
+    run_pipeline()
