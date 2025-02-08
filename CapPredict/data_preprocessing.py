@@ -111,21 +111,23 @@ def normalize_features(features_df):
 
 def split_data(features_df, test_size=0.2, random_state=42):
     """
-    Split the dataset into training and testing sets and apply SMOTE with a controlled ratio.
+    Split the dataset into training and testing sets and ensure Final_Value is removed from feature set.
     """
     train_df, test_df = train_test_split(features_df, test_size=test_size, random_state=random_state)
 
-    feature_cols = ["Inflection_Point", "Growth_Rate", "Final_Value", "Initial_Growth_Rate", "Time_to_50_Completion"]
+    feature_cols = ["Inflection_Point", "Growth_Rate", "Initial_Growth_Rate", "Time_to_50_Completion"]
 
-    # Apply SMOTE but only generate 50% more minority class samples
-    smote = SMOTE(sampling_strategy=0.5, random_state=42)  # Instead of full balance (1:1), use 50% minority oversampling
+    # Apply SMOTE for class balancing
+    smote = SMOTE(sampling_strategy=0.5, random_state=42)
     X_train, y_train = smote.fit_resample(train_df[feature_cols], train_df["Final_Value"] >= 0.90)
 
     # Convert back to DataFrame
     train_df = pd.DataFrame(X_train, columns=feature_cols)
-    train_df["Final_Value"] = y_train.astype(int)  # Binary class
+    train_df["Final_Value"] = y_train.astype(int)  # Keep it for labels but not as a feature
+
+    test_df = test_df[feature_cols + ["Final_Value"]]  # Ensure test_df has the correct structure
 
     print("\nBalanced Training Set:")
-    print(train_df["Final_Value"].value_counts())  # Show new class balance
+    print(train_df["Final_Value"].value_counts())  # Show class distribution
 
     return train_df, test_df
