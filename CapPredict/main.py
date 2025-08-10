@@ -1,5 +1,5 @@
-﻿from data_preprocessing import generate_curves, extract_features, normalize_features, split_data
-from predictive_model import train_random_forest, train_xgboost, evaluate_model
+from .data_preprocessing import generate_curves, extract_features, normalize_features, split_data
+from .predictive_model import train_random_forest, train_xgboost, evaluate_model
 import matplotlib.pyplot as plt
 
 def run_pipeline():
