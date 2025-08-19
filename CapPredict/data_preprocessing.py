@@ -3,21 +3,28 @@ from sklearn.model_selection import train_test_split
 from imblearn.over_sampling import SMOTE
 import numpy as np
 import pandas as pd
+from config import config
 
-def generate_curves(num_curves=100, time_start=0, time_end=10, num_points=500, seed=42):
+def generate_curves(num_curves=None, time_start=None, time_end=None, num_points=None, seed=None):
     """
     Generate random logistic S-curves to simulate project progress.
 
     Parameters:
-        num_curves (int): Number of S-curves to generate.
-        time_start (float): Start of the time range.
-        time_end (float): End of the time range.
-        num_points (int): Number of time points per curve.
-        seed (int): Random seed for reproducibility.
+        num_curves (int, optional): Number of S-curves to generate. Uses config default if None.
+        time_start (float, optional): Start of the time range. Uses config default if None.
+        time_end (float, optional): End of the time range. Uses config default if None.
+        num_points (int, optional): Number of time points per curve. Uses config default if None.
+        seed (int, optional): Random seed for reproducibility. Uses config default if None.
 
     Returns:
         pd.DataFrame: A DataFrame containing generated S-curves and a Time column.
     """
+    # Use configuration defaults if parameters not provided
+    num_curves = num_curves if num_curves is not None else config.data_generation.num_curves
+    time_start = time_start if time_start is not None else config.data_generation.time_start
+    time_end = time_end if time_end is not None else config.data_generation.time_end
+    num_points = num_points if num_points is not None else config.data_generation.num_points
+    seed = seed if seed is not None else config.data_generation.random_seed
     np.random.seed(seed)  # Ensure reproducibility
 
     # Create the time range
@@ -28,9 +35,9 @@ def generate_curves(num_curves=100, time_start=0, time_end=10, num_points=500, s
 
     # Generate each curve
     for i in range(num_curves):
-        # Randomize steepness (k) and midpoint (x0)
-        k = np.random.uniform(0.5, 2.0)  # Steepness of the curve
-        x0 = np.random.uniform(3, 7)     # Midpoint of the curve
+        # Randomize steepness (k) and midpoint (x0) using configured ranges
+        k = np.random.uniform(config.data_generation.steepness_min, config.data_generation.steepness_max)
+        x0 = np.random.uniform(config.data_generation.midpoint_min, config.data_generation.midpoint_max)
 
         # Logistic function: y = 1 / (1 + e^(-k(x - x0)))
         y = 1 / (1 + np.exp(-k * (time - x0)))  # Sigmoid function
@@ -42,16 +49,25 @@ def generate_curves(num_curves=100, time_start=0, time_end=10, num_points=500, s
     # Combine curves and time into a single DataFrame
     curves_df = pd.DataFrame(
         data=np.column_stack([curves_array.T, time]),  # Combine S-curves (columns) and time
-        columns=[f"Project_{i+1}" for i in range(num_curves)] + ["Time"]  # Add "Time" as the last column
+        columns=[f"Project_{i+1}" for i in range(num_curves)] + [config.features.time_column]
     )
 
     return curves_df
 
 def extract_features(curves_df):
+    """
+    Extract meaningful features from S-curves for machine learning.
+    
+    Args:
+        curves_df: DataFrame containing S-curves and time column
+        
+    Returns:
+        pd.DataFrame: Features DataFrame with extracted characteristics
+    """
     features = []
-    time = curves_df["Time"]
+    time = curves_df[config.features.time_column]
 
-    for col in curves_df.columns[:-1]:  # Exclude the "Time" column
+    for col in curves_df.columns[:-1]:  # Exclude the time column
         curve = curves_df[col]
 
         # Compute inflection point (steepest slope)
@@ -66,12 +82,15 @@ def extract_features(curves_df):
         # Initial growth rate (slope at start)
         initial_growth_rate = np.gradient(curve)[0]
 
-        # Time to reach 50% completion
+        # Time to reach 50% completion (using configured threshold)
         try:
-            half_completion_index = np.where(curve >= 0.5)[0][0]
-            time_to_half_completion = time[half_completion_index]
+            threshold_indices = np.where(curve >= config.data_generation.half_completion_threshold)[0]
+            if len(threshold_indices) > 0:
+                time_to_half_completion = time[threshold_indices[0]]
+            else:
+                time_to_half_completion = np.nan
         except IndexError:
-            # If curve never reaches 50%, set a high default value
+            # If curve never reaches threshold, set to NaN
             time_to_half_completion = np.nan  
 
         features.append({
@@ -84,50 +103,81 @@ def extract_features(curves_df):
         })
 
     features_df = pd.DataFrame(features)
-    print("\nExtracted Features (Sample):")
-    print(features_df.head())  # Debugging print
+    
+    if config.logging.show_debug_prints:
+        print("\nExtracted Features (Sample):")
+        print(features_df.head())
+    
     return features_df
 
 def normalize_features(features_df):
     """
-    Normalize feature values using Min-Max Scaling.
-    """
-    scaler = MinMaxScaler()
+    Normalize feature values using configured normalization method.
     
-    # Selecting only numerical feature columns
-    feature_columns = ["Inflection_Point", "Growth_Rate", "Final_Value", "Initial_Growth_Rate", "Time_to_50_Completion"]
+    Args:
+        features_df: DataFrame with extracted features
+        
+    Returns:
+        pd.DataFrame: Normalized features DataFrame
+    """
+    scaler = MinMaxScaler()  # Currently only Min-Max, but configurable for future
+    
+    # Use configured feature columns for normalization
+    feature_columns = config.features.all_features
 
     # Ensure only numerical columns are normalized
     normalized_values = scaler.fit_transform(features_df[feature_columns])
     
     # Convert back to DataFrame
     normalized_df = pd.DataFrame(normalized_values, columns=feature_columns)
-    normalized_df.insert(0, "Project", features_df["Project"])  # Keep project names
+    normalized_df.insert(0, config.features.project_id_column, features_df[config.features.project_id_column])
 
-    print("\nNormalized Features (Sample):")
-    print(normalized_df.head())  # Debugging print
+    if config.logging.show_debug_prints:
+        print("\nNormalized Features (Sample):")
+        print(normalized_df.head())
 
     return normalized_df
 
-def split_data(features_df, test_size=0.2, random_state=42):
+def split_data(features_df, test_size=None, random_state=None):
     """
-    Split the dataset into training and testing sets and ensure Final_Value is removed from feature set.
+    Split the dataset into training and testing sets with configured class balancing.
+    
+    Args:
+        features_df: DataFrame with normalized features
+        test_size: Fraction for test set (uses config default if None)
+        random_state: Random seed (uses config default if None)
+        
+    Returns:
+        tuple: (train_df, test_df) with balanced training data
     """
+    # Use configuration defaults if parameters not provided
+    test_size = test_size if test_size is not None else config.data_processing.test_size
+    random_state = random_state if random_state is not None else config.data_processing.random_state
+    
     train_df, test_df = train_test_split(features_df, test_size=test_size, random_state=random_state)
 
-    feature_cols = ["Inflection_Point", "Growth_Rate", "Initial_Growth_Rate", "Time_to_50_Completion"]
+    # Use configured feature columns (excluding target)
+    feature_cols = config.features.model_features
 
-    # Apply SMOTE for class balancing
-    smote = SMOTE(sampling_strategy=0.5, random_state=42)
-    X_train, y_train = smote.fit_resample(train_df[feature_cols], train_df["Final_Value"] >= 0.90)
+    # Apply SMOTE for class balancing with configured parameters
+    smote = SMOTE(
+        sampling_strategy=config.data_processing.smote_sampling_strategy, 
+        random_state=config.data_processing.smote_random_state
+    )
+    
+    # Create target variable using configured success threshold
+    target_variable = train_df[config.features.target_feature] >= config.data_generation.success_threshold
+    X_train, y_train = smote.fit_resample(train_df[feature_cols], target_variable)
 
     # Convert back to DataFrame
     train_df = pd.DataFrame(X_train, columns=feature_cols)
-    train_df["Final_Value"] = y_train.astype(int)  # Keep it for labels but not as a feature
+    train_df[config.features.target_feature] = y_train.astype(int)
 
-    test_df = test_df[feature_cols + ["Final_Value"]]  # Ensure test_df has the correct structure
+    # Ensure test_df has the correct structure
+    test_df = test_df[feature_cols + [config.features.target_feature]]
 
-    print("\nBalanced Training Set:")
-    print(train_df["Final_Value"].value_counts())  # Show class distribution
+    if config.logging.show_debug_prints:
+        print("\nBalanced Training Set:")
+        print(train_df[config.features.target_feature].value_counts())
 
     return train_df, test_df
