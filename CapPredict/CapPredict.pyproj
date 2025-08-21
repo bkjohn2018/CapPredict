@@ -11,7 +11,7 @@
     <OutputPath>.</OutputPath>
     <Name>CapPredict</Name>
     <RootNamespace>CapPredict</RootNamespace>
-    <InterpreterId>Global|VisualStudio|cap_predict_env</InterpreterId>
+    <InterpreterId>CondaEnv|CondaEnv|cap_predict_env</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,7 +31,10 @@
     <Compile Include="predictive_model.py" />
   </ItemGroup>
   <ItemGroup>
-    <InterpreterReference Include="Global|VisualStudio|cap_predict_env" />
+    <InterpreterReference Include="CondaEnv|CondaEnv|cap_predict_env" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="requirements.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
