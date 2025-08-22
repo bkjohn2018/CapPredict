@@ -27,3 +27,4 @@ tqdm>=4.65.0     # Progress bars
 # Animation and optimization
 scipy>=1.10.0    # Curve fitting and optimization
 matplotlib.animation>=3.6.0  # Animation support
+Pillow>=9.0.0    # GIF export support (fallback when FFmpeg unavailable)

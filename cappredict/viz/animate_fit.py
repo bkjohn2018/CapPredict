@@ -20,6 +20,9 @@ import numpy as np
 from scipy.optimize import curve_fit, OptimizeWarning
 import warnings
 
+# Import our animation utilities
+from .utils_animation import get_safe_animation_writer, get_writer_info
+
 # Suppress scipy optimization warnings for cleaner output
 warnings.filterwarnings("ignore", category=OptimizeWarning)
 
@@ -311,21 +314,32 @@ class LogisticFitAnimator:
         )
         return anim
     
-    def save_animation(self, output_path: str) -> None:
+    def save_animation(self, output_path: str) -> str:
         """
-        Save animation to MP4 file.
+        Save animation to file using the robust save_animation helper.
         
         Args:
-            output_path: Path to save the MP4 file
+            output_path: Path to save the animation file
+            
+        Returns:
+            Path to the saved animation file
         """
-        anim = self.create_animation()
+        # Extract directory and basename from the output path
+        output_path = Path(output_path)
+        outdir = str(output_path.parent)
+        basename = output_path.stem
         
-        # Ensure output directory exists
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        # Use the robust save_animation helper
+        saved_path = save_animation(
+            fig=self.fig,
+            anim=self.create_animation(),
+            outdir=outdir,
+            basename=basename,
+            fps=self.fps,
+            dpi=120
+        )
         
-        print(f"Saving animation to {output_path}...")
-        anim.save(output_path, writer='ffmpeg', fps=self.fps, bitrate=1800)
-        print(f"Animation saved successfully!")
+        return saved_path
     
     def save_metrics(self, metrics_path: str) -> None:
         """
@@ -340,6 +354,44 @@ class LogisticFitAnimator:
             json.dump(self.metrics_history, f, indent=2)
         
         print(f"Metrics saved to {metrics_path}")
+
+
+def save_animation(fig, anim, outdir: str, basename: str, fps: int, dpi: int = 120) -> str:
+    """
+    Save animation with robust writer selection and timestamped directory.
+    
+    Args:
+        fig: Matplotlib figure object
+        anim: Animation object
+        outdir: Base output directory
+        basename: Base filename without extension
+        fps: Frames per second
+        dpi: Dots per inch for output
+        
+    Returns:
+        Absolute path to the saved animation file
+    """
+    # Create timestamped directory
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H%M")
+    output_dir = Path(outdir) / f"{timestamp}_{basename}"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Get appropriate writer and extension
+    writer, ext = get_safe_animation_writer(fps=fps, dpi=dpi)
+    
+    # Construct output path
+    output_path = output_dir / f"{basename}{ext}"
+    
+    # Save animation
+    print(f"[INFO] Writing animation to: {output_path}")
+    print(f"[INFO] Using writer: {get_writer_info(writer)}")
+    
+    anim.save(str(output_path), writer=writer)
+    
+    # Close figure to free memory
+    plt.close(fig)
+    
+    return str(output_path.absolute())
 
 
 def main():
@@ -395,26 +447,31 @@ def main():
         )
         print("   Using fallback synthetic S-curve generator")
     
-    # Create output directory with timestamp
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_dir = Path("/workspace/artifacts") / timestamp
-    output_dir.mkdir(parents=True, exist_ok=True)
-    
     # Create animator
     print("🎨 Creating animation...")
     animator = LogisticFitAnimator(time_data, value_data, args.frames, args.fps)
     
-    # Save animation
-    mp4_path = output_dir / "fit_demo.mp4"
-    animator.save_animation(str(mp4_path))
+    # Save animation using the animator's save_animation method
+    # Create artifacts directory in current working directory
+    artifacts_dir = Path.cwd() / "artifacts"
+    artifacts_dir.mkdir(exist_ok=True)
     
-    # Save metrics
-    metrics_path = output_dir / "metrics.json"
+    animation_path = animator.save_animation(str(artifacts_dir / "fit_demo"))
+    
+    # Save metrics in the same directory
+    metrics_dir = Path(animation_path).parent
+    metrics_path = metrics_dir / "metrics.json"
     animator.save_metrics(str(metrics_path))
     
     print(f"✅ Animation complete!")
-    print(f"   Video: {mp4_path}")
+    print(f"   Animation: {animation_path}")
     print(f"   Metrics: {metrics_path}")
+    
+    # Print the artifact path for CLI success
+    print(f"\n🎯 Animation saved to: {animation_path}")
+    
+    # Return the animation path for CLI success
+    return animation_path
 
 
 if __name__ == "__main__":
