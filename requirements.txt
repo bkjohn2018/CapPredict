@@ -23,3 +23,7 @@ mypy>=1.5.0
 seaborn>=0.12.0  # Additional plotting capabilities
 joblib>=1.3.0    # Model serialization
 tqdm>=4.65.0     # Progress bars
+
+# Animation and optimization
+scipy>=1.10.0    # Curve fitting and optimization
+matplotlib.animation>=3.6.0  # Animation support
