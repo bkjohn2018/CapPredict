@@ -1,5 +1,8 @@
 # CapPredict
 
+![Build](https://github.com/bkjohn2018/CapPredict/actions/workflows/python-ci.yml/badge.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+
 ## Project Overview
 
 CapPredict is a machine learning project designed to predict project completion success by analyzing S-curve patterns. The system generates synthetic logistic S-curves that simulate project progress over time, extracts meaningful features from these curves, and uses ensemble machine learning models to classify whether a project will achieve successful completion (≥90% completion rate).
