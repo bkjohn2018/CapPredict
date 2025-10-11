@@ -1,6 +1,8 @@
 import pandas as pd
-from data_preprocessing import generate_curves, extract_features, normalize_features, split_data
-from config import config
+from cappredict.data_loading import generate_curves
+from cappredict.feature_engineering import extract_features
+from cappredict.preprocessing import normalize_features, split_data
+from cappredict.config import config
 
 
 def test_generate_curves_shape():

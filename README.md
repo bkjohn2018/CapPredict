@@ -1,5 +1,8 @@
 # CapPredict
 
+![Build](https://github.com/bkjohn2018/CapPredict/actions/workflows/python-ci.yml/badge.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+
 ## Project Overview
 
 CapPredict is a machine learning project designed to predict project completion success by analyzing S-curve patterns. The system generates synthetic logistic S-curves that simulate project progress over time, extracts meaningful features from these curves, and uses ensemble machine learning models to classify whether a project will achieve successful completion (≥90% completion rate).
@@ -48,6 +51,7 @@ CapPredict/
 
 ## Usage
 
+### ML Pipeline
 Run the complete ML pipeline:
 ```bash
 python main.py
@@ -60,6 +64,19 @@ This will:
 4. Split into training/testing sets with class balancing
 5. Train Random Forest and XGBoost models
 6. Evaluate both models and display feature importance plots
+
+### Animation
+Generate logistic curve fitting animations for presentations:
+```bash
+python -m cappredict.viz.animate_fit --seed 42 --frames 150 --fps 24
+```
+
+**CapPredict prefers MP4 (FFmpeg). If FFmpeg isn't available, it falls back to GIF automatically.**
+
+**Platform-specific FFmpeg installation:**
+- **Windows**: Install FFmpeg and ensure `ffmpeg` is on PATH (e.g., via chocolatey or manual install)
+- **macOS**: `brew install ffmpeg`
+- **Linux/Conda**: `conda install -c conda-forge ffmpeg`
 
 ## Dependencies
 

@@ -1,4 +1,4 @@
-from config import config
+from cappredict.config import config
 
 
 def test_config_validate():

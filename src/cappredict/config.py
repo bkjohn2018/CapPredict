@@ -5,9 +5,24 @@ This module centralizes all configuration parameters used throughout the CapPred
 machine learning pipeline, eliminating hardcoded values and improving maintainability.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import List, Tuple
 import os
+
+
+# Simple path configuration as requested in scaffolding
+@dataclass(frozen=True)
+class Paths:
+    raw: str = "data/raw"
+    processed: str = "data/processed"
+    models: str = "models"
+    reports: str = "reports"
+    visuals: str = "reports/visuals"
+
+
+PATHS = Paths()
 
 
 @dataclass
@@ -73,7 +88,7 @@ class DataProcessingConfig:
     random_state: int = 42
     
     # SMOTE parameters for class balancing
-    smote_sampling_strategy: float = 0.5
+    smote_sampling_strategy: str = "auto"  # Changed from 0.5 to "auto" for better handling
     smote_random_state: int = 42
     
     # Normalization parameters
@@ -127,14 +142,14 @@ class VisualizationConfig:
 class LoggingConfig:
     """Configuration for logging and debugging."""
     
-    # Core logging parameters (aligned with requested schema)
+    # Core logging parameters (aligned with logging_setup)
     level: str = "INFO"              # DEBUG/INFO/WARNING/ERROR
-    show_debug_prints: bool = False   # keep verbose previews behind this flag
+    show_debug_prints: bool = True   # verbose previews behind this flag
     propagate: bool = False
     json: bool = False
 
-    # Back-compat and extras used elsewhere in app
-    log_level: str = "INFO"          # legacy alias; not used by new setup
+    # Legacy/compatibility
+    log_level: str = "INFO"          # legacy alias for backwards compatibility
     show_progress_bars: bool = True
     
     # Output formatting (non-logging core)
@@ -317,7 +332,7 @@ class ProductionConfig(Config):
 
 if __name__ == "__main__":
     # Configuration validation and testing (using centralized logging)
-    from logging_setup import setup_logging
+    from cappredict.logging_setup import setup_logging
     setup_logging()
     import logging
     log = logging.getLogger(__name__)

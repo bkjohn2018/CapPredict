@@ -1,22 +1,9 @@
-import warnings
-warnings.warn(
-    "data_preprocessing is deprecated; use cappredict.preprocessing instead.",
-    DeprecationWarning, stacklevel=2
-)
-
-# Use absolute imports to work when this module is imported as a top-level module
-from preprocessing import normalize_features, split_data, ensure_no_nans  # type: ignore
-from data_loading import generate_curves  # type: ignore
-from feature_engineering import extract_features  # type: ignore
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 from imblearn.over_sampling import SMOTE
 import numpy as np
 import pandas as pd
 from config import config
-import logging
-
-log = logging.getLogger(__name__)
 
 def generate_curves(num_curves=None, time_start=None, time_end=None, num_points=None, seed=None):
     """
@@ -118,7 +105,8 @@ def extract_features(curves_df):
     features_df = pd.DataFrame(features)
     
     if config.logging.show_debug_prints:
-        log.info("features extracted: rows=%s cols=%s", features_df.shape[0], features_df.shape[1])
+        print("\nExtracted Features (Sample):")
+        print(features_df.head())
     
     return features_df
 
@@ -145,7 +133,8 @@ def normalize_features(features_df):
     normalized_df.insert(0, config.features.project_id_column, features_df[config.features.project_id_column])
 
     if config.logging.show_debug_prints:
-        log.info("normalized features: rows=%s cols=%s", normalized_df.shape[0], normalized_df.shape[1])
+        print("\nNormalized Features (Sample):")
+        print(normalized_df.head())
 
     return normalized_df
 
@@ -188,7 +177,7 @@ def split_data(features_df, test_size=None, random_state=None):
     test_df = test_df[feature_cols + [config.features.target_feature]]
 
     if config.logging.show_debug_prints:
-        counts = train_df[config.features.target_feature].value_counts().to_dict()
-        log.info("balanced training labels: %s", counts)
+        print("\nBalanced Training Set:")
+        print(train_df[config.features.target_feature].value_counts())
 
     return train_df, test_df

@@ -1,0 +1,10 @@
+# Visualization module dependencies
+matplotlib>=3.6.0
+scipy>=1.10.0
+numpy>=1.24.0
+
+# For testing
+pytest>=7.0.0
+
+# For MP4 export (system dependency)
+# ffmpeg

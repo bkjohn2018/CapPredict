@@ -3,13 +3,24 @@ import sys
 import pytest
 
 
-# Ensure modules under CapPredict/ can be imported as top-level
-ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-SRC_DIR = os.path.join(ROOT, "CapPredict")
-if SRC_DIR not in sys.path:
-    sys.path.insert(0, SRC_DIR)
+# Ensure src/ is on sys.path for imports in tests
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+SRC = os.path.join(ROOT, "src")
+if SRC not in sys.path:
+    sys.path.insert(0, SRC)
 
-from config import config  # noqa: E402
+
+def pytest_configure():
+    # Ensure headless backend for matplotlib during tests
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+    except Exception:
+        pass
+
+
+# Import config after path is set
+from cappredict.config import config  # noqa: E402
 
 
 @pytest.fixture(autouse=True)
@@ -43,5 +54,3 @@ def use_dev_settings():
         config.visualization.block_plots = orig["block_plots"]
         config.data_processing.test_size = orig["test_size"]
         config.data_processing.random_state = orig["random_state"]
-
-

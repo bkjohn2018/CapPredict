@@ -1,12 +1,10 @@
-﻿from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier # type: ignore
 from sklearn.metrics import accuracy_score, classification_report
 from xgboost import XGBClassifier
 import matplotlib.pyplot as plt
 import numpy as np
 from config import config
-import logging
-log = logging.getLogger(__name__)
 
 def train_logistic_regression(train_df, threshold=None):
     """
@@ -23,7 +21,8 @@ def train_logistic_regression(train_df, threshold=None):
     feature_cols = config.features.model_features
 
     if config.logging.show_debug_prints:
-        log.info("training columns: %s", train_df.columns.tolist())
+        print("\nTraining Data Columns:")
+        print(train_df.columns.tolist())
 
     X_train = train_df[feature_cols]
     y_train = (train_df[config.features.target_feature] >= threshold).astype(int)
@@ -52,12 +51,10 @@ def evaluate_model(model, test_df, model_name="Model"):
     # Performance Metrics
     emoji = "🚀" if config.logging.use_emojis else ""
     accuracy = accuracy_score(y_test, y_pred)
-    log.info("%s %s Accuracy: %.2f", emoji, model_name, accuracy)
-    if config.logging.show_debug_prints:
-        # Only log summary text; avoid raw arrays
-        report = classification_report(y_test, y_pred, zero_division=0)
-        for line in report.strip().splitlines():
-            log.info("%s", line)
+    
+    print(f"\n{emoji} {model_name} Accuracy: {accuracy:.{config.logging.decimal_places}f}")
+    print(f"\nClassification Report ({model_name}):")
+    print(classification_report(y_test, y_pred, zero_division=0))
 
     # Feature Importance (only if model has this attribute)
     if hasattr(model, 'feature_importances_'):
@@ -85,10 +82,10 @@ def evaluate_model(model, test_df, model_name="Model"):
                 filename = f"{config.visualization.plot_output_dir}/{model_name.lower().replace(' ', '_')}_importance.{config.visualization.plot_format}"
                 plt.savefig(filename, dpi=config.visualization.plot_dpi, bbox_inches='tight')
                 if config.logging.show_debug_prints:
-                    log.info("plot saved: %s", filename)
+                    print(f"Plot saved: {filename}")
     else:
         if config.logging.show_debug_prints:
-            log.info("model has no feature_importances_: %s", model_name)
+            print(f"Model {model_name} does not have feature importance attribute")
 
 
 
@@ -116,24 +113,6 @@ def train_random_forest(train_df):
         random_state=config.models.rf_random_state
     )
 
-    model.fit(X_train, y_train)
-    return model
-
-
-def train_model(model, train_df):
-    """
-    Train any sklearn-compatible classifier using configured features/threshold.
-
-    Args:
-        model: Classifier with fit(X, y)
-        train_df: Training DataFrame
-
-    Returns:
-        Trained model instance
-    """
-    feature_cols = config.features.model_features
-    X_train = train_df[feature_cols]
-    y_train = (train_df[config.features.target_feature] >= config.models.success_threshold).astype(int)
     model.fit(X_train, y_train)
     return model
 

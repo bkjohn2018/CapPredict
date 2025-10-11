@@ -1,7 +1,10 @@
 import pytest
-from models.registry import build_default_registry
-from models.training import train_model_generic
-from data_preprocessing import generate_curves, extract_features, normalize_features, split_data
+from cappredict.models.registry import build_default_registry
+from cappredict.models.training import train_model_generic
+from cappredict.data_loading import generate_curves
+from cappredict.feature_engineering import extract_features
+from cappredict.preprocessing import normalize_features, split_data
+from cappredict.config import config
 
 
 def test_registry_has_default_models():
@@ -23,7 +26,6 @@ def test_train_and_predict(model_name):
 
     trained = train_model_generic(model, train_df)
     # Basic predict sanity
-    from config import config
     X = test_df[config.features.model_features]
     preds = trained.predict(X)
     assert len(preds) == len(X)

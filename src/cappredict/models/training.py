@@ -1,6 +1,6 @@
 from typing import Any
 import pandas as pd
-from config import config
+from ..config import config
 
 
 def train_model_generic(model: Any, train_df: pd.DataFrame) -> Any:
