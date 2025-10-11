@@ -386,3 +386,9 @@ reports/visuals/*
 
 # Ignore legacy embedded repo directory
 CapPredict-1/
+## Local environment and editor settings
+# Ignore local environment configs
+.env
+
+# Ignore VS Code settings by default (tracked files remain)
+.vscode/
