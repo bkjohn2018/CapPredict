@@ -1,9 +1,8 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from pathlib import Path
 import joblib
 import pandas as pd
-import numpy as np
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 from .data_prep import split_features_target
 from .config import PATHS
@@ -47,3 +46,4 @@ def explain_entrypoint(model: str = "rf.pkl", out_dir: str = "reports/visuals"):
         print(f"Wrote {saved}")
     else:
         print("Model has no feature_importances_; skip.")
+
