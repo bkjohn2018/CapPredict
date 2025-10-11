@@ -1,5 +1,5 @@
 from typing import Callable, Dict, List
-from config import config
+from ..config import config
 from sklearn.ensemble import RandomForestClassifier
 
 

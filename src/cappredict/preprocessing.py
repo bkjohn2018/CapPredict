@@ -3,7 +3,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 from imblearn.over_sampling import SMOTE
 import logging
-from config import config
+from .config import config
 
 log = logging.getLogger(__name__)
 
