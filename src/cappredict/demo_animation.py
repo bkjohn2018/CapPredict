@@ -34,7 +34,7 @@ def main():
         print(f"   Metrics saved to: {metrics['output_files']['metrics']}")
         print(f"   Final RMSE: {metrics['final_rmse']:.4f}")
         print(f"   Correlation: {metrics['correlation']:.4f}")
-        print(f"   Final parameters:")
+        print("   Final parameters:")
         print(f"     L (max): {metrics['final_parameters']['L']:.3f}")
         print(f"     k (rate): {metrics['final_parameters']['k']:.3f}")
         print(f"     t0 (inflection): {metrics['final_parameters']['t0']:.3f}")
