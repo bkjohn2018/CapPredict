@@ -1,4 +1,4 @@
-# CapPredict Setup Guide
+﻿# CapPredict Setup Guide
 
 ## Prerequisites
 
@@ -71,8 +71,8 @@ False    40
 True     20
 Name: Final_Value, dtype: int64
 
-🚀 Training Random Forest...
-🚀 Random Forest Accuracy: 0.85
+ðŸš€ Training Random Forest...
+ðŸš€ Random Forest Accuracy: 0.85
 
 Classification Report (Random Forest):
               precision    recall  f1-score   support
@@ -82,8 +82,8 @@ Classification Report (Random Forest):
    macro avg       0.84      0.80      0.82        20
 weighted avg       0.85      0.85      0.85        20
 
-🚀 Training XGBoost...
-🚀 XGBoost Accuracy: 0.80
+ðŸš€ Training XGBoost...
+ðŸš€ XGBoost Accuracy: 0.80
 
 [Feature importance plots will be displayed]
 ```
@@ -92,32 +92,21 @@ weighted avg       0.85      0.85      0.85        20
 
 ```
 CapPredict/
-├── README.md                 # Project overview and documentation
-├── ARCHITECTURE.md           # Technical architecture documentation
-├── DATA_MODEL.md            # Data structures and feature definitions
-├── SETUP.md                 # This setup guide
-├── requirements.txt         # Python dependencies
-├── CapPredict.sln          # Visual Studio solution file
-└── CapPredict/             # Main source code directory
-    ├── main.py             # Pipeline orchestration
-    ├── data_preprocessing.py # Data generation and feature extraction
-    ├── predictive_model.py  # Model training and evaluation
-    ├── data_loader.py      # (Unused) Data loading utilities
-    ├── CapPredict.py       # (Empty) Main module
-    └── CapPredict.pyproj   # Visual Studio Python project file
+â”œâ”€â”€ README.md                 # Project overview and documentation
+â”œâ”€â”€ ARCHITECTURE.md           # Technical architecture documentation
+â”œâ”€â”€ DATA_MODEL.md            # Data structures and feature definitions
+â”œâ”€â”€ SETUP.md                 # This setup guide
+â”œâ”€â”€ requirements.txt         # Python dependencies
+â””â”€â”€ CapPredict/             # Main source code directory
+    â”œâ”€â”€ main.py             # Pipeline orchestration
+    â”œâ”€â”€ data_preprocessing.py # Data generation and feature extraction
+    â”œâ”€â”€ predictive_model.py  # Model training and evaluation
+    â””â”€â”€ CapPredict.pyproj   # Visual Studio Python project file
 ```
 
 ## Development Environment
 
-### Visual Studio Integration
-The project includes Visual Studio solution and project files for development in Visual Studio with Python Tools.
-
-1. Open `CapPredict.sln` in Visual Studio
-2. Ensure the Python environment is set to `cap_predict_env`
-3. Set `main.py` as the startup file
-4. Run with F5 or Ctrl+F5
-
-### Command Line Development
+### Visual Studio Integration\r\nVisual Studio artifacts have been retired in this repo. Use command line or VS Code.\r\n\r\n### Command Line Development
 For development without Visual Studio:
 ```bash
 # Navigate to source directory
