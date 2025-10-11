@@ -413,8 +413,7 @@ def main():
                        help='Standard deviation of noise to add to synthetic data')
     
     args = parser.parse_args()
-    
-    print(f"≡ƒÄ¼ Creating logistic curve fitting animation...")
+print("≡ƒÄ¼ Creating logistic curve fitting animation...")
     print(f"   Seed: {args.seed}")
     print(f"   Frames: {args.frames}")
     print(f"   FPS: {args.fps}")
@@ -462,8 +461,7 @@ def main():
     metrics_dir = Path(animation_path).parent
     metrics_path = metrics_dir / "metrics.json"
     animator.save_metrics(str(metrics_path))
-    
-    print(f"Γ£à Animation complete!")
+print("Γ£à Animation complete!")
     print(f"   Animation: {animation_path}")
     print(f"   Metrics: {metrics_path}")
     
@@ -476,3 +474,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
