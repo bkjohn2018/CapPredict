@@ -1,4 +1,3 @@
-import pandas as pd
 from cappredict.data_loading import generate_curves
 from cappredict.feature_engineering import extract_features
 from cappredict.preprocessing import normalize_features, split_data

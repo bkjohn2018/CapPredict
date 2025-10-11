@@ -21,7 +21,7 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(project_root / "cappredict" / "viz"))
 
-from cappredict.viz.animate_fit import (
+from cappredict.viz.animate_fit import (  # noqa: E402
     generate_synthetic_scurve,
     fit_logistic_curve,
     logistic_function,
