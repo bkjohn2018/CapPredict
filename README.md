@@ -1,11 +1,11 @@
-# CapPredict
+﻿# CapPredict
 
 ![Build](https://github.com/bkjohn2018/CapPredict/actions/workflows/python-ci.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
 ## Project Overview
 
-CapPredict is a machine learning project designed to predict project completion success by analyzing S-curve patterns. The system generates synthetic logistic S-curves that simulate project progress over time, extracts meaningful features from these curves, and uses ensemble machine learning models to classify whether a project will achieve successful completion (≥90% completion rate).
+CapPredict is a machine learning project designed to predict project completion success by analyzing S-curve patterns. The system generates synthetic logistic S-curves that simulate project progress over time, extracts meaningful features from these curves, and uses ensemble machine learning models to classify whether a project will achieve successful completion (â‰¥90% completion rate).
 
 ## Business Problem
 
@@ -36,17 +36,15 @@ The system extracts five key features from each S-curve:
 4. **Evaluation**: Accuracy metrics and feature importance analysis
 
 ### Success Classification
-Projects are classified as "successful" if they achieve ≥90% completion rate, based on the extracted features (excluding the final value to prevent data leakage).
+Projects are classified as "successful" if they achieve â‰¥90% completion rate, based on the extracted features (excluding the final value to prevent data leakage).
 
 ## Current Architecture
 
 ```
 CapPredict/
-├── main.py              # Pipeline orchestration and execution
-├── data_preprocessing.py # Data generation, feature extraction, normalization
-├── predictive_model.py   # Model training, evaluation, and prediction
-├── data_loader.py        # (Currently unused) Data loading utilities
-└── CapPredict.py         # (Empty) Main module placeholder
+â”œâ”€â”€ main.py              # Pipeline orchestration and execution
+â”œâ”€â”€ data_preprocessing.py # Data generation, feature extraction, normalization
+â”œâ”€â”€ predictive_model.py   # Model training, evaluation, and prediction
 ```
 
 ## Usage
@@ -107,3 +105,4 @@ This is a proof-of-concept implementation focusing on synthetic data generation 
 - Model hyperparameter optimization
 - Web-based dashboard for predictions
 - Real-time project monitoring capabilities
+
