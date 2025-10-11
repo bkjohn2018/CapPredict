@@ -1,4 +1,6 @@
-from data_preprocessing import generate_curves, extract_features, normalize_features, split_data
+﻿from .data_loading import generate_curves
+from .feature_engineering import extract_features
+from .preprocessing import normalize_features, split_data
 from predictive_model import train_random_forest, train_xgboost, evaluate_model
 from config import config
 import matplotlib.pyplot as plt
@@ -17,7 +19,7 @@ def run_pipeline():
     
     # Step 1: Generate S-Curves using configured parameters
     if config.logging.show_debug_prints:
-        print(f"🔄 Generating {config.data_generation.num_curves} synthetic S-curves...")
+        print(f"ðŸ”„ Generating {config.data_generation.num_curves} synthetic S-curves...")
     
     curves_df = generate_curves(
         num_curves=config.data_generation.num_curves,
@@ -29,17 +31,17 @@ def run_pipeline():
 
     # Step 2: Extract Enhanced Features
     if config.logging.show_debug_prints:
-        print("🔍 Extracting features from S-curves...")
+        print("ðŸ” Extracting features from S-curves...")
     features_df = extract_features(curves_df)
 
     # Step 3: Normalize Data
     if config.logging.show_debug_prints:
-        print("📏 Normalizing feature data...")
+        print("ðŸ“ Normalizing feature data...")
     normalized_df = normalize_features(features_df)
 
     # Step 4: Split Data with configured parameters
     if config.logging.show_debug_prints:
-        print(f"✂️ Splitting data ({int((1-config.data_processing.test_size)*100)}% train, {int(config.data_processing.test_size*100)}% test)...")
+        print(f"âœ‚ï¸ Splitting data ({int((1-config.data_processing.test_size)*100)}% train, {int(config.data_processing.test_size*100)}% test)...")
     train_df, test_df = split_data(
         normalized_df, 
         test_size=config.data_processing.test_size, 
@@ -47,7 +49,7 @@ def run_pipeline():
     )
 
     # Step 5: Train and Evaluate Random Forest
-    emoji = "🚀" if config.logging.use_emojis else ""
+    emoji = "ðŸš€" if config.logging.use_emojis else ""
     print(f"\n{emoji} Training Random Forest...")
     rf_model = train_random_forest(train_df)
     evaluate_model(rf_model, test_df, model_name="Random Forest")
@@ -63,3 +65,4 @@ def run_pipeline():
 
 if __name__ == "__main__":
     run_pipeline()
+
