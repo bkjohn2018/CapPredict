@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Animation module for demonstrating logistic S-curve fitting over time.
 
@@ -352,10 +352,7 @@ class LogisticFitAnimator:
         
         with open(metrics_path, 'w') as f:
             json.dump(self.metrics_history, f, indent=2)
-        
-        print(f"Metrics saved to {metrics_path}")
-
-
+print("Metrics saved to {metrics_path}")
 def save_animation(fig, anim, outdir: str, basename: str, fps: int, dpi: int = 120) -> str:
     """
     Save animation with robust writer selection and timestamped directory.
@@ -383,9 +380,8 @@ def save_animation(fig, anim, outdir: str, basename: str, fps: int, dpi: int = 1
     output_path = output_dir / f"{basename}{ext}"
     
     # Save animation
-    print(f"[INFO] Writing animation to: {output_path}")
-    print(f"[INFO] Using writer: {get_writer_info(writer)}")
-    
+print("[INFO] Writing animation to: {output_path}")
+print("[INFO] Using writer: {get_writer_info(writer)}")
     anim.save(str(output_path), writer=writer)
     
     # Close figure to free memory
@@ -413,13 +409,11 @@ def main():
                        help='Standard deviation of noise to add to synthetic data')
     
     args = parser.parse_args()
-    
-    print(f"🎬 Creating logistic curve fitting animation...")
-    print(f"   Seed: {args.seed}")
-    print(f"   Frames: {args.frames}")
-    print(f"   FPS: {args.fps}")
-    print(f"   Time points: {args.time_points}")
-    
+print("🎬 Creating logistic curve fitting animation...")
+print("   Seed: {args.seed}")
+print("   Frames: {args.frames}")
+print("   FPS: {args.fps}")
+print("   Time points: {args.time_points}")
     # Generate synthetic S-curve data
     print("📈 Generating synthetic S-curve data...")
     
@@ -432,7 +426,7 @@ def main():
             value_data = curves_df.iloc[:, 0].values  # First curve
             print("   Using existing S-curve generator from CapPredict")
         except Exception as e:
-            print(f"   Failed to use existing generator ({e}), falling back to synthetic")
+print("   Failed to use existing generator ({e}), falling back to synthetic")
             time_data, value_data = generate_synthetic_scurve(
                 time_points=args.time_points,
                 noise_std=args.noise,
@@ -462,14 +456,11 @@ def main():
     metrics_dir = Path(animation_path).parent
     metrics_path = metrics_dir / "metrics.json"
     animator.save_metrics(str(metrics_path))
-    
-    print(f"✅ Animation complete!")
-    print(f"   Animation: {animation_path}")
-    print(f"   Metrics: {metrics_path}")
-    
+print("✅ Animation complete!")
+print("   Animation: {animation_path}")
+print("   Metrics: {metrics_path}")
     # Print the artifact path for CLI success
-    print(f"\n🎯 Animation saved to: {animation_path}")
-    
+print("\n🎯 Animation saved to: {animation_path}")
     # Return the animation path for CLI success
     return animation_path
 
