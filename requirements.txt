@@ -28,3 +28,7 @@ tqdm>=4.65.0     # Progress bars
 scipy>=1.10.0    # Curve fitting and optimization
 matplotlib.animation>=3.6.0  # Animation support
 Pillow>=9.0.0    # GIF export support (fallback when FFmpeg unavailable)
+
+# CLI and configuration
+typer>=0.9.0       # Command-line interface utilities
+pydantic>=1.10,<3  # Data validation and settings

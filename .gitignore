@@ -361,3 +361,25 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+ 
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+.env
+.ipynb_checkpoints/
+
+# Data & models
+data/raw/*
+data/processed/*
+models/*.pkl
+
+# Reports & artifacts
+reports/visuals/*
+!.gitkeep
+
+# VS Code
+.vscode/

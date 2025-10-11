@@ -5,9 +5,24 @@ This module centralizes all configuration parameters used throughout the CapPred
 machine learning pipeline, eliminating hardcoded values and improving maintainability.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import List, Tuple
 import os
+
+
+# Simple path configuration as requested in scaffolding
+@dataclass(frozen=True)
+class Paths:
+    raw: str = "data/raw"
+    processed: str = "data/processed"
+    models: str = "models"
+    reports: str = "reports"
+    visuals: str = "reports/visuals"
+
+
+PATHS = Paths()
 
 
 @dataclass
