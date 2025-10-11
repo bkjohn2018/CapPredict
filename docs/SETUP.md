@@ -139,6 +139,89 @@ curves_df = generate_curves(num_curves=100)  # Change num_curves here
 y_train = (train_df["Final_Value"] >= 0.90).astype(int)  # Change 0.90 here
 ```
 
+## 🔐 Secure Key Handling
+
+To ensure consistent, secure access to API-based integrations (e.g., OpenAI, Codex, or Cursor) without exposing secrets, all credentials must be managed via environment variables, not stored in code or configuration files.
+
+### 1️⃣ Environment File (Local Only)
+
+Create a `.env` file in the project root:
+
+```bash
+# .env (do not commit)
+OPENAI_API_KEY=sk-proj-<your-key-here>
+```
+
+> The `.env` file is excluded from version control via `.gitignore`. Never commit or share this file.
+
+### 2️⃣ Git Ignore
+
+Confirm the following entries exist in `.gitignore`:
+
+```
+# Ignore local environment and IDE configs
+.env
+.vscode/
+```
+
+### 3️⃣ VS Code Launch Configuration
+
+Ensure your `.vscode/launch.json` includes an `envFile` reference so local runs automatically load the environment variables:
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run CapPredict",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/cappredict/main.py",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
+```
+
+### 4️⃣ Using the Key in Code
+
+Load the environment variable in Python:
+
+```python
+import os
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+if not OPENAI_API_KEY:
+    raise EnvironmentError("OPENAI_API_KEY not set in environment or .env file")
+```
+
+Most AI tools (Cursor, Copilot, Codex, etc.) automatically detect `OPENAI_API_KEY` from your environment.
+
+### 5️⃣ Optional — Use `python-dotenv` for standalone scripts
+
+When running scripts outside VS Code:
+
+```bash
+pip install python-dotenv
+```
+
+At the top of your script:
+
+```python
+from dotenv import load_dotenv
+load_dotenv()
+```
+
+### ✅ Summary
+
+| Step             | Purpose                  | Scope                  |
+| ---------------- | ------------------------ | ---------------------- |
+| `.env`           | Local secret storage     | Developer machine only |
+| `.gitignore`     | Prevents leaks           | Repository-wide        |
+| `launch.json`    | Automatic key loading    | VS Code                |
+| `python-dotenv`  | CLI script compatibility | Optional               |
+| `OPENAI_API_KEY` | Standard variable name   | Universal              |
+
 ## Troubleshooting
 
 ### Common Issues
