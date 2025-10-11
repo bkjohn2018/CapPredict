@@ -8,6 +8,7 @@ from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 import matplotlib.pyplot as plt
 from .data_prep import split_features_target
 from .config import PATHS
+from .visualization import plot_feature_importance
 
 
 def _metrics(y_true, y_pred) -> dict[str, float]:
@@ -41,16 +42,9 @@ def evaluate_entrypoint(model: str = "rf.pkl", test_path: str = "data/processed/
 def explain_entrypoint(model: str = "rf.pkl", out_dir: str = "reports/visuals"):
     Path(out_dir).mkdir(parents=True, exist_ok=True)
     m = joblib.load(f"{PATHS.models}/{model}")
-    # Feature importances if available
     if hasattr(m, "feature_importances_"):
-        importances = m.feature_importances_
-        plt.figure()
-        plt.bar(np.arange(len(importances)), importances)
-        plt.title(f"Feature Importance: {model}")
-        plt.tight_layout()
         out = Path(out_dir) / f"{model}_feature_importance.png"
-        plt.savefig(out)
-        plt.close()
-        print(f"Wrote {out}")
+        saved = plot_feature_importance(m.feature_importances_, str(out))
+        print(f"Wrote {saved}")
     else:
         print("Model has no feature_importances_; skip.")

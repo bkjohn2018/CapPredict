@@ -8,3 +8,12 @@ SRC = os.path.join(ROOT, "src")
 if SRC not in sys.path:
     sys.path.insert(0, SRC)
 
+
+def pytest_configure():
+    # Ensure headless backend for matplotlib during tests
+    try:
+        import matplotlib
+
+        matplotlib.use("Agg")
+    except Exception:
+        pass
