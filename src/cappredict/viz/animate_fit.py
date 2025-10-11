@@ -188,8 +188,8 @@ class LogisticFitAnimator:
         self.fig, self.ax = plt.subplots(figsize=(12, 8))
         self.line_observed, = self.ax.plot([], [], 'bo', markersize=6, label='Observed Data')
         self.line_fitted, = self.ax.plot([], [], 'r-', linewidth=2, label='Fitted Logistic Curve')
-        self.line_inflection = self.ax.axvline(x=0, color='orange', linestyle='--', alpha=0.7, label='Inflection Point (t₀)')
-        self.line_t90 = self.ax.axvline(x=0, color='green', linestyle='--', alpha=0.7, label='90% Completion (t₉₀)')
+        self.line_inflection = self.ax.axvline(x=0, color='orange', linestyle='--', alpha=0.7, label='Inflection Point (tΓéÇ)')
+        self.line_t90 = self.ax.axvline(x=0, color='green', linestyle='--', alpha=0.7, label='90% Completion (tΓéëΓéÇ)')
         
         # Text elements for parameter display
         self.text_params = self.ax.text(0.02, 0.98, '', transform=self.ax.transAxes, 
@@ -261,8 +261,8 @@ class LogisticFitAnimator:
                 f'Points: {n_points}/{len(self.time_data)}\n'
                 f'L (max): {L:.3f}\n'
                 f'k (rate): {k:.3f}\n'
-                f't₀ (inflection): {t0:.3f}\n'
-                f't₉₀ (90%): {t90:.3f}\n'
+                f'tΓéÇ (inflection): {t0:.3f}\n'
+                f'tΓéëΓéÇ (90%): {t90:.3f}\n'
                 f'RMSE: {rmse:.4f}'
             )
             self.text_params.set_text(param_text)
@@ -352,7 +352,10 @@ class LogisticFitAnimator:
         
         with open(metrics_path, 'w') as f:
             json.dump(self.metrics_history, f, indent=2)
-print("Metrics saved to {metrics_path}")
+        
+        print(f"Metrics saved to {metrics_path}")
+
+
 def save_animation(fig, anim, outdir: str, basename: str, fps: int, dpi: int = 120) -> str:
     """
     Save animation with robust writer selection and timestamped directory.
@@ -380,8 +383,9 @@ def save_animation(fig, anim, outdir: str, basename: str, fps: int, dpi: int = 1
     output_path = output_dir / f"{basename}{ext}"
     
     # Save animation
-print("[INFO] Writing animation to: {output_path}")
-print("[INFO] Using writer: {get_writer_info(writer)}")
+    print(f"[INFO] Writing animation to: {output_path}")
+    print(f"[INFO] Using writer: {get_writer_info(writer)}")
+    
     anim.save(str(output_path), writer=writer)
     
     # Close figure to free memory
@@ -409,13 +413,15 @@ def main():
                        help='Standard deviation of noise to add to synthetic data')
     
     args = parser.parse_args()
-print("🎬 Creating logistic curve fitting animation...")
-print("   Seed: {args.seed}")
-print("   Frames: {args.frames}")
-print("   FPS: {args.fps}")
-print("   Time points: {args.time_points}")
+    
+    print(f"≡ƒÄ¼ Creating logistic curve fitting animation...")
+    print(f"   Seed: {args.seed}")
+    print(f"   Frames: {args.frames}")
+    print(f"   FPS: {args.fps}")
+    print(f"   Time points: {args.time_points}")
+    
     # Generate synthetic S-curve data
-    print("📈 Generating synthetic S-curve data...")
+    print("≡ƒôê Generating synthetic S-curve data...")
     
     # Try to use existing generator if available
     if config is not None:
@@ -426,7 +432,7 @@ print("   Time points: {args.time_points}")
             value_data = curves_df.iloc[:, 0].values  # First curve
             print("   Using existing S-curve generator from CapPredict")
         except Exception as e:
-print("   Failed to use existing generator ({e}), falling back to synthetic")
+            print(f"   Failed to use existing generator ({e}), falling back to synthetic")
             time_data, value_data = generate_synthetic_scurve(
                 time_points=args.time_points,
                 noise_std=args.noise,
@@ -442,7 +448,7 @@ print("   Failed to use existing generator ({e}), falling back to synthetic")
         print("   Using fallback synthetic S-curve generator")
     
     # Create animator
-    print("🎨 Creating animation...")
+    print("≡ƒÄ¿ Creating animation...")
     animator = LogisticFitAnimator(time_data, value_data, args.frames, args.fps)
     
     # Save animation using the animator's save_animation method
@@ -456,11 +462,14 @@ print("   Failed to use existing generator ({e}), falling back to synthetic")
     metrics_dir = Path(animation_path).parent
     metrics_path = metrics_dir / "metrics.json"
     animator.save_metrics(str(metrics_path))
-print("✅ Animation complete!")
-print("   Animation: {animation_path}")
-print("   Metrics: {metrics_path}")
+    
+    print(f"Γ£à Animation complete!")
+    print(f"   Animation: {animation_path}")
+    print(f"   Metrics: {metrics_path}")
+    
     # Print the artifact path for CLI success
-print("\n🎯 Animation saved to: {animation_path}")
+    print(f"\n≡ƒÄ» Animation saved to: {animation_path}")
+    
     # Return the animation path for CLI success
     return animation_path
 
