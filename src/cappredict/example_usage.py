@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Example usage of the CapPredict animation module.
 
@@ -15,7 +15,7 @@ from cappredict.viz.animate_fit import create_fit_animation
 
 def example_basic_usage():
     """Basic usage example."""
-    print("🎬 Example 1: Basic Usage")
+    print("ðŸŽ¬ Example 1: Basic Usage")
     print("-" * 30)
     
     metrics = create_fit_animation(
@@ -26,14 +26,14 @@ def example_basic_usage():
         show_plot=False
     )
     
-    print(f"✅ Animation created with {metrics['frames']} frames")
+    print(f"âœ… Animation created with {metrics['frames']} frames")
     print(f"   Final RMSE: {metrics['final_rmse']:.4f}")
     print(f"   Saved to: {metrics['output_files']['mp4']}")
     print()
 
 def example_high_quality():
     """High-quality animation for presentations."""
-    print("🎬 Example 2: High-Quality Animation")
+    print("ðŸŽ¬ Example 2: High-Quality Animation")
     print("-" * 30)
     
     metrics = create_fit_animation(
@@ -44,14 +44,14 @@ def example_high_quality():
         show_plot=False
     )
     
-    print(f"✅ High-quality animation created with {metrics['frames']} frames")
+    print(f"âœ… High-quality animation created with {metrics['frames']} frames")
     print(f"   Final RMSE: {metrics['final_rmse']:.4f}")
     print(f"   Saved to: {metrics['output_files']['mp4']}")
     print()
 
 def example_reproducibility():
     """Demonstrate reproducibility with same seed."""
-    print("🎬 Example 3: Reproducibility Test")
+    print("ðŸŽ¬ Example 3: Reproducibility Test")
     print("-" * 30)
     
     seed = 999
@@ -77,16 +77,16 @@ def example_reproducibility():
     rmse_match = abs(metrics1['final_rmse'] - metrics2['final_rmse']) < 1e-10
     params_match = metrics1['final_parameters'] == metrics2['final_parameters']
     
-    print(f"✅ Reproducibility test completed")
-    print(f"   RMSE match: {'✅' if rmse_match else '❌'}")
-    print(f"   Parameters match: {'✅' if params_match else '❌'}")
+    print("âœ… Reproducibility test completed")
+    print(f"   RMSE match: {'âœ…' if rmse_match else 'âŒ'}")
+    print(f"   Parameters match: {'âœ…' if params_match else 'âŒ'}")
     print(f"   Run 1 RMSE: {metrics1['final_rmse']:.6f}")
     print(f"   Run 2 RMSE: {metrics2['final_rmse']:.6f}")
     print()
 
 def example_parameter_analysis():
     """Analyze how parameters change during fitting."""
-    print("🎬 Example 4: Parameter Analysis")
+    print("ðŸŽ¬ Example 4: Parameter Analysis")
     print("-" * 30)
     
     metrics = create_fit_animation(
@@ -98,7 +98,7 @@ def example_parameter_analysis():
     )
     
     params = metrics['final_parameters']
-    print(f"✅ Parameter analysis completed")
+    print("âœ… Parameter analysis completed")
     print(f"   L (maximum): {params['L']:.3f}")
     print(f"   k (growth rate): {params['k']:.3f}")
     print(f"   t0 (inflection): {params['t0']:.3f}")
@@ -109,7 +109,7 @@ def example_parameter_analysis():
 
 def main():
     """Run all examples."""
-    print("🚀 CapPredict Animation Module Examples")
+    print("ðŸš€ CapPredict Animation Module Examples")
     print("=" * 50)
     print()
     
@@ -123,13 +123,13 @@ def main():
         example_reproducibility()
         example_parameter_analysis()
         
-        print("🎉 All examples completed successfully!")
+        print("ðŸŽ‰ All examples completed successfully!")
         print()
-        print("📁 Check the 'examples' directory for generated animations")
-        print("📊 Each example includes metrics.json with detailed statistics")
+        print("ðŸ“ Check the 'examples' directory for generated animations")
+        print("ðŸ“Š Each example includes metrics.json with detailed statistics")
         
     except Exception as e:
-        print(f"❌ Error running examples: {e}")
+        print(f"âŒ Error running examples: {e}")
         return 1
     
     return 0

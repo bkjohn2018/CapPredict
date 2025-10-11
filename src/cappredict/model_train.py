@@ -6,7 +6,7 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestRegressor
 from xgboost import XGBRegressor
-from .data_prep import load_train_test, split_features_target
+from .data_prep import split_features_target
 from .config import PATHS
 
 

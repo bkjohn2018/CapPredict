@@ -8,7 +8,7 @@ machine learning pipeline, eliminating hardcoded values and improving maintainab
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import List, Tuple
+from typing import List
 import os
 
 

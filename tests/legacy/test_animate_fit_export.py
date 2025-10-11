@@ -11,14 +11,13 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import patch
 
 # Add project paths for imports
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(project_root / "cappredict" / "viz"))
 
-from cappredict.viz.animate_fit import (
+from cappredict.viz.animate_fit import (  # noqa: E402
     generate_synthetic_scurve,
     LogisticFitAnimator,
     save_animation
