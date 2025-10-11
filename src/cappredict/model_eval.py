@@ -5,7 +5,6 @@ import joblib
 import pandas as pd
 import numpy as np
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
-import matplotlib.pyplot as plt
 from .data_prep import split_features_target
 from .config import PATHS
 from .visualization import plot_feature_importance
@@ -30,7 +29,7 @@ def evaluate_entrypoint(model: str = "rf.pkl", test_path: str = "data/processed/
     # append/overwrite a lightweight report
     report = Path(f"{PATHS.reports}/validation_report.md")
     lines = [
-        f"# Validation Report\n",
+        "# Validation Report\n",
         f"**Model:** {model}\n",
         f"**Rows:** {len(df)}\n",
         f"- R2: {metrics['r2']:.4f}\n- MAE: {metrics['mae']:.4f}\n- RMSE: {metrics['rmse']:.4f}\n",

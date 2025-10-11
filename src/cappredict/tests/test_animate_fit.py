@@ -198,7 +198,7 @@ class TestAnimationCreation:
         """Test basic animation creation."""
         # Mock the animation and writer
         mock_anim = mock_animation.return_value
-        mock_writer_instance = mock_writer.return_value
+        _ = mock_writer.return_value
         
         metrics = create_fit_animation(
             seed=42,
