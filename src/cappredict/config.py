@@ -142,12 +142,17 @@ class VisualizationConfig:
 class LoggingConfig:
     """Configuration for logging and debugging."""
     
-    # Logging parameters
-    log_level: str = "INFO"
-    show_debug_prints: bool = True
+    # Core logging parameters (aligned with logging_setup)
+    level: str = "INFO"              # DEBUG/INFO/WARNING/ERROR
+    show_debug_prints: bool = True   # verbose previews behind this flag
+    propagate: bool = False
+    json: bool = False
+
+    # Legacy/compatibility
+    log_level: str = "INFO"          # legacy alias for backwards compatibility
     show_progress_bars: bool = True
     
-    # Output formatting
+    # Output formatting (non-logging core)
     use_emojis: bool = True
     decimal_places: int = 2
 
@@ -230,9 +235,10 @@ class Config:
             errors.append("target_feature should not be in model_features")
         
         if errors:
-            print("Configuration validation errors:")
+            import logging
+            log = logging.getLogger(__name__)
             for error in errors:
-                print(f"  - {error}")
+                log.error("config validation error: %s", error)
             return False
         
         return True
@@ -325,20 +331,20 @@ class ProductionConfig(Config):
 
 
 if __name__ == "__main__":
-    # Configuration validation and testing
-    print("Testing CapPredict Configuration...")
-    
-    # Test default configuration
+    # Configuration validation and testing (using centralized logging)
+    from cappredict.logging_setup import setup_logging
+    setup_logging()
+    import logging
+    log = logging.getLogger(__name__)
+
     default_config = Config()
-    print(f"Default config valid: {default_config.validate()}")
-    print(default_config.summary())
-    
-    # Test development configuration
+    log.info("default config valid: %s", default_config.validate())
+    log.info("%s", default_config.summary())
+
     dev_config = DevelopmentConfig()
-    print(f"\nDevelopment config valid: {dev_config.validate()}")
-    print(dev_config.summary())
-    
-    # Test production configuration  
+    log.info("development config valid: %s", dev_config.validate())
+    log.info("%s", dev_config.summary())
+
     prod_config = ProductionConfig()
-    print(f"\nProduction config valid: {prod_config.validate()}")
-    print(prod_config.summary())
+    log.info("production config valid: %s", prod_config.validate())
+    log.info("%s", prod_config.summary())
